@@ -75,6 +75,7 @@ def get_me(current_user: models.User = Depends(auth.get_current_user)):
 # --- Form Endpoints ---
 
 @app.get("/api/forms", response_model=List[schemas.FormListItem])
+@app.get("/forms", response_model=List[schemas.FormListItem])
 def list_forms(
     current_user: Optional[models.User] = Depends(auth.get_optional_current_user),
     db: Session = Depends(get_db)
@@ -83,6 +84,7 @@ def list_forms(
     return crud.get_forms(db, user_id=user_id)
 
 @app.post("/api/forms", response_model=schemas.FormOut, status_code=status.HTTP_201_CREATED)
+@app.post("/forms", response_model=schemas.FormOut, status_code=status.HTTP_201_CREATED)
 def create_form(
     form_in: schemas.FormCreate,
     current_user: Optional[models.User] = Depends(auth.get_optional_current_user),
@@ -93,6 +95,7 @@ def create_form(
 
 
 @app.get("/api/forms/{form_id}", response_model=schemas.FormOut)
+@app.get("/forms/{form_id}", response_model=schemas.FormOut)
 def get_form(form_id: str, db: Session = Depends(get_db)):
     form = crud.get_form(db, form_id)
     if not form:
@@ -103,6 +106,7 @@ def get_form(form_id: str, db: Session = Depends(get_db)):
     return out
 
 @app.put("/api/forms/{form_id}", response_model=schemas.FormOut)
+@app.put("/forms/{form_id}", response_model=schemas.FormOut)
 def update_form(form_id: str, form_in: schemas.FormUpdate, db: Session = Depends(get_db)):
     updated_form = crud.update_form(db, form_id, form_in)
     if not updated_form:
@@ -113,6 +117,7 @@ def update_form(form_id: str, form_in: schemas.FormUpdate, db: Session = Depends
     return out
 
 @app.post("/api/forms/{form_id}/duplicate", response_model=schemas.FormOut)
+@app.post("/forms/{form_id}/duplicate", response_model=schemas.FormOut)
 def duplicate_form(form_id: str, db: Session = Depends(get_db)):
     duplicated = crud.duplicate_form(db, form_id)
     if not duplicated:
@@ -120,6 +125,7 @@ def duplicate_form(form_id: str, db: Session = Depends(get_db)):
     return schemas.FormOut.model_validate(duplicated)
 
 @app.delete("/api/forms/{form_id}", status_code=status.HTTP_204_NO_CONTENT)
+@app.delete("/forms/{form_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_form(form_id: str, db: Session = Depends(get_db)):
     success = crud.delete_form(db, form_id)
     if not success:
@@ -127,6 +133,7 @@ def delete_form(form_id: str, db: Session = Depends(get_db)):
     return None
 
 @app.put("/api/forms/{form_id}/questions", response_model=List[schemas.QuestionOut])
+@app.put("/forms/{form_id}/questions", response_model=List[schemas.QuestionOut])
 def sync_questions(form_id: str, questions_in: List[schemas.QuestionUpdate], db: Session = Depends(get_db)):
     form = crud.get_form(db, form_id)
     if not form:
@@ -137,6 +144,7 @@ def sync_questions(form_id: str, questions_in: List[schemas.QuestionUpdate], db:
 # --- Respondent & Submission Endpoints ---
 
 @app.post("/api/forms/{form_id}/submit", response_model=schemas.ResponseOut, status_code=status.HTTP_201_CREATED)
+@app.post("/forms/{form_id}/submit", response_model=schemas.ResponseOut, status_code=status.HTTP_201_CREATED)
 def submit_response(form_id: str, payload: schemas.ResponseSubmit, db: Session = Depends(get_db)):
     form = crud.get_form(db, form_id)
     if not form:
@@ -148,6 +156,7 @@ def submit_response(form_id: str, payload: schemas.ResponseSubmit, db: Session =
     return schemas.ResponseOut.model_validate(response)
 
 @app.get("/api/forms/{form_id}/responses", response_model=List[schemas.ResponseOut])
+@app.get("/forms/{form_id}/responses", response_model=List[schemas.ResponseOut])
 def get_responses(form_id: str, db: Session = Depends(get_db)):
     form = crud.get_form(db, form_id)
     if not form:
@@ -156,6 +165,7 @@ def get_responses(form_id: str, db: Session = Depends(get_db)):
     return [schemas.ResponseOut.model_validate(r) for r in responses]
 
 @app.get("/api/forms/{form_id}/stats", response_model=List[schemas.QuestionStats])
+@app.get("/forms/{form_id}/stats", response_model=List[schemas.QuestionStats])
 def get_form_stats(form_id: str, db: Session = Depends(get_db)):
     form = crud.get_form(db, form_id)
     if not form:
@@ -163,6 +173,7 @@ def get_form_stats(form_id: str, db: Session = Depends(get_db)):
     return crud.get_response_stats(db, form_id)
 
 @app.get("/api/forms/{form_id}/responses/export")
+@app.get("/forms/{form_id}/responses/export")
 def export_responses_csv(form_id: str, db: Session = Depends(get_db)):
     form = crud.get_form(db, form_id)
     if not form:
