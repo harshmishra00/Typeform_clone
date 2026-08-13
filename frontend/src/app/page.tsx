@@ -25,7 +25,9 @@ import {
   Menu,
   X,
   Sparkles,
-  MousePointerClick
+  MousePointerClick,
+  ChevronUp,
+
 } from 'lucide-react';
 
 // Custom X (Twitter) icon
@@ -63,6 +65,7 @@ function TypewriterInput({ trigger }: { trigger: boolean }) {
     return () => clearInterval(interval);
   }, [trigger]);
 
+
   return (
     <div className="flex items-center space-x-1 min-h-[20px]">
       <span className="text-gray-800 text-xs sm:text-sm font-medium">{text}</span>
@@ -72,7 +75,7 @@ function TypewriterInput({ trigger }: { trigger: boolean }) {
 }
 
 export default function HomePage() {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  // const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<'ask' | 'act' | 'learn'>('ask');
   const [activeTestimonial, setActiveTestimonial] = useState(0);
 
@@ -192,6 +195,11 @@ export default function HomePage() {
     }
   ];
 
+  const [platformOpen, setPlatformOpen] = useState(false);
+  const [solutionsOpen, setSolutionsOpen] = useState(false);
+  const [resourcesOpen, setResourcesOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
   return (
     <div className="min-h-screen bg-tf-neutral-1000 text-tf-neutral-25 font-twklausanne overflow-x-hidden selection:bg-tf-purple selection:text-white relative">
 
@@ -224,60 +232,1039 @@ export default function HomePage() {
       </div>
 
       {/* ─── NAVIGATION BAR ─────────────────────────────────────────────────── */}
-      <nav className="fixed top-0 left-0 right-0 z-50 bg-tf-neutral-1000/90 backdrop-blur-md border-b border-white/5">
+      <nav
+        className="fixed top-0 left-0 right-0 z-50 bg-tf-neutral-1000/90 backdrop-blur-md border-b border-white/5"
+        onMouseLeave={() => setPlatformOpen(false)}
+      >
         <div className="max-w-[1400px] mx-auto px-6 md:px-0 py-4 flex items-center justify-between">
+
+          {/* LEFT SIDE */}
           <div className="flex items-center space-x-8">
-            <Link href="/" className="flex items-center space-x-2 text-white">
-              <TypeformLogo className="w-7 h-[18px]" color="white" />
-              <span className="font-bold text-lg tracking-tight font-twklausanne">Typeform</span>
+
+            {/* LOGO */}
+            <Link
+              href="/"
+              className="flex items-center space-x-2 text-white shrink-0"
+            >
+              <TypeformLogo
+                className="w-7 h-[18px]"
+                color="white"
+              />
+
+              <span className="font-bold text-lg tracking-tight font-twklausanne">
+                Typeform
+              </span>
             </Link>
+
+
+            {/* DESKTOP NAV */}
             <div className="hidden lg:flex items-center space-x-6 text-sm text-gray-300 font-medium">
-              <button className="hover:text-white transition-colors flex items-center space-x-1">
-                <span>Platform</span>
-                <ChevronDown className="w-3 h-3" />
-              </button>
-              <button className="hover:text-white transition-colors flex items-center space-x-1">
-                <span>Solutions</span>
-                <ChevronDown className="w-3 h-3" />
-              </button>
-              <button className="hover:text-white transition-colors flex items-center space-x-1">
-                <span>Resources</span>
-                <ChevronDown className="w-3 h-3" />
-              </button>
-              <Link href="/pricing" className="hover:text-white transition-colors">Pricing</Link>
+
+              {/* ================= PLATFORM ================= */}
+              <div
+                className="relative"
+                onMouseEnter={() => setPlatformOpen(true)}
+              >
+                <button
+                  className={`
+              hover:text-white
+              transition-colors
+              flex
+              items-center
+              gap-1
+              py-2
+              ${platformOpen ? "text-white" : ""}
+            `}
+                >
+                  <span>Platform</span>
+
+                  {platformOpen ? (
+                    <ChevronUp className="w-3 h-3" />
+                  ) : (
+                    <ChevronDown className="w-3 h-3" />
+                  )}
+                </button>
+              </div>
+
+
+              {/* ================= SOLUTIONS ================= */}
+              <div
+                className="relative"
+                onMouseEnter={() => {
+                  setSolutionsOpen(true);
+                  setPlatformOpen(false);
+                  setResourcesOpen(false);
+                }}
+              >
+                <button
+                  className={`hover:text-white transition-colors flex items-center gap-1 ${solutionsOpen ? "text-white" : ""
+                    }`}
+                >
+                  <span>Solutions</span>
+
+                  {solutionsOpen ? (
+                    <ChevronUp className="w-3 h-3" />
+                  ) : (
+                    <ChevronDown className="w-3 h-3" />
+                  )}
+                </button>
+              </div>
+
+
+              {/* ================= RESOURCES ================= */}
+              <div
+                className="relative"
+                onMouseEnter={() => {
+                  setResourcesOpen(true);
+                  setPlatformOpen(false);
+                  setSolutionsOpen(false);
+                }}
+              >
+                <button
+                  className={`hover:text-white transition-colors flex items-center gap-1 ${resourcesOpen ? "text-white" : ""
+                    }`}
+                >
+                  <span>Resources</span>
+
+                  {resourcesOpen ? (
+                    <ChevronUp className="w-3 h-3" />
+                  ) : (
+                    <ChevronDown className="w-3 h-3" />
+                  )}
+                </button>
+              </div>
+
+
+              {/* ================= PRICING ================= */}
+              <Link
+                href="/pricing"
+                className="hover:text-white transition-colors"
+              >
+                Pricing
+              </Link>
+
             </div>
           </div>
 
+
+          {/* RIGHT SIDE */}
           <div className="hidden md:flex items-center space-x-4">
-            <Link href="/login" className="text-sm font-semibold text-gray-300 hover:text-white transition-colors px-3 py-2">
+
+            <Link
+              href="/login"
+              className="text-sm font-semibold text-gray-300 hover:text-white transition-colors px-3 py-2"
+            >
               Log in
             </Link>
-            <button className="border border-white/20 hover:border-white/40 hover:bg-white/5 text-white text-sm font-semibold px-4 py-2.5 rounded-xl transition-all cursor-pointer">
+
+            <button
+              className="
+          border
+          border-white/20
+          hover:border-white/40
+          hover:bg-white/5
+          text-white
+          text-sm
+          font-semibold
+          px-4
+          py-2.5
+          rounded-xl
+          transition-all
+          cursor-pointer
+        "
+            >
               Contact sales
             </button>
-            <Link href="/signup" className="bg-tf-neutral-25 hover:bg-tf-neutral-100 text-tf-neutral-1000 text-sm font-bold px-4 py-2.5 rounded-xl transition-all shadow-tf-sm-inset font-twklausanne">
+
+            <Link
+              href="/signup"
+              className="
+          bg-tf-neutral-25
+          hover:bg-tf-neutral-100
+          text-tf-neutral-1000
+          text-sm
+          font-bold
+          px-4
+          py-2.5
+          rounded-xl
+          transition-all
+          shadow-tf-sm-inset
+          font-twklausanne
+        "
+            >
               Sign up
             </Link>
+
           </div>
 
-          {/* Mobile menu button */}
-          <button className="lg:hidden text-white" onClick={() => setMobileMenuOpen(!mobileMenuOpen)}>
-            {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+
+          {/* MOBILE BUTTON */}
+          <button
+            className="lg:hidden text-white"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          >
+            {mobileMenuOpen ? (
+              <X className="w-6 h-6" />
+            ) : (
+              <Menu className="w-6 h-6" />
+            )}
           </button>
 
-          {/* Mobile Dropdown */}
+
+          {/* MOBILE MENU */}
           {mobileMenuOpen && (
-            <div className="absolute top-16 left-0 right-0 bg-tf-neutral-1000 border-b border-white/10 p-6 flex flex-col space-y-4 lg:hidden">
-              <button className="text-left font-medium text-lg text-gray-200">Platform</button>
-              <button className="text-left font-medium text-lg text-gray-200">Solutions</button>
-              <button className="text-left font-medium text-lg text-gray-200">Resources</button>
-              <Link href="/pricing" className="font-medium text-lg text-gray-200">Pricing</Link>
+            <div className="absolute top-full left-0 right-0 bg-tf-neutral-1000 border-b border-white/10 p-6 flex flex-col space-y-4 lg:hidden">
+
+              <button className="text-left font-medium text-lg text-gray-200">
+                Platform
+              </button>
+
+              <button className="text-left font-medium text-lg text-gray-200">
+                Solutions
+              </button>
+
+              <button className="text-left font-medium text-lg text-gray-200">
+                Resources
+              </button>
+
+              <Link
+                href="/pricing"
+                className="font-medium text-lg text-gray-200"
+              >
+                Pricing
+              </Link>
+
               <hr className="border-white/10" />
-              <Link href="/login" className="text-center font-bold py-3 border border-white/20 rounded-xl">Log in</Link>
-              <Link href="/signup" className="text-center bg-tf-neutral-25 text-tf-neutral-1000 font-bold py-3 rounded-xl">Sign up</Link>
+
+              <Link
+                href="/login"
+                className="text-center font-bold py-3 border border-white/20 rounded-xl"
+              >
+                Log in
+              </Link>
+
+              <Link
+                href="/signup"
+                className="text-center bg-tf-neutral-25 text-tf-neutral-1000 font-bold py-3 rounded-xl"
+              >
+                Sign up
+              </Link>
+
             </div>
           )}
         </div>
+
+
+        {/* ========================================================= */}
+        {/* PLATFORM MEGA MENU */}
+        {/* ========================================================= */}
+
+        {platformOpen && (
+          <div
+            className="
+        absolute
+        top-full
+        left-0
+        right-0
+        bg-[#29232d]
+        border-t
+        border-white/5
+        shadow-2xl
+      "
+            onMouseEnter={() => setPlatformOpen(true)}
+            onMouseLeave={() => setPlatformOpen(false)}
+          >
+
+            <div className="max-w-[1400px] mx-auto px-6 md:px-10 py-10">
+
+              <div className="grid grid-cols-12 gap-8">
+
+
+                {/* ================================================= */}
+                {/* PLATFORM COLUMN */}
+                {/* ================================================= */}
+
+                <div className="col-span-4 pr-8 border-r border-white/15">
+
+                  <div className="flex items-center gap-3 mb-8">
+
+                    <div className="text-gray-400">
+                      <svg
+                        width="18"
+                        height="18"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.5"
+                      >
+                        <rect x="4" y="4" width="6" height="6" />
+                        <rect x="14" y="4" width="6" height="6" />
+                        <rect x="4" y="14" width="6" height="6" />
+                        <rect x="14" y="14" width="6" height="6" />
+                      </svg>
+                    </div>
+
+                    <span className="text-sm text-gray-300 tracking-wide">
+                      PLATFORM
+                    </span>
+
+                  </div>
+
+
+                  <div className="space-y-6">
+
+                    <MegaMenuItem
+                      title="Platform overview"
+                      description="What is Typeform?"
+                    />
+
+                    <MegaMenuItem
+                      title="Typeform AI"
+                      description="Your AI know-pilot"
+                    />
+
+                    <MegaMenuItem
+                      title="Growth Flow"
+                      description="Automated workflows for GTM teams"
+                      badge="NEW"
+                    />
+
+                    <MegaMenuItem
+                      title="Research Flow"
+                      description="AI-moderated research studies"
+                      badge="NEW"
+                    />
+
+                    <MegaMenuItem
+                      title="Contacts & Automations"
+                      description="Automated workflows to grow your business"
+                    />
+
+                    <MegaMenuItem
+                      title="Video engagement"
+                      description="Interactive video forms"
+                    />
+
+                    <MegaMenuItem
+                      title="Analytics and reporting"
+                      description="Answers you can act on"
+                    />
+
+                    <MegaMenuItem
+                      title="Integrations"
+                      description="Connect all your apps"
+                    />
+
+                  </div>
+                </div>
+
+
+                {/* ================================================= */}
+                {/* TOOLS COLUMN */}
+                {/* ================================================= */}
+
+                <div className="col-span-4 px-1 pr-8 border-r border-white/15">
+
+                  <div className="flex items-center gap-3 mb-8">
+
+                    <div className="text-gray-400">
+                      <svg
+                        width="18"
+                        height="18"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.5"
+                      >
+                        <rect x="5" y="8" width="14" height="12" rx="2" />
+                        <path d="M8 8V5h8v3" />
+                      </svg>
+                    </div>
+
+                    <span className="text-sm text-gray-300 tracking-wide">
+                      TOOLS
+                    </span>
+
+                  </div>
+
+
+                  <div className="space-y-6">
+
+                    {[
+                      "Form builder",
+                      "Survey maker",
+                      "Quiz maker",
+                      "Test maker",
+                      "Poll builder",
+                      "Application form builder",
+                      "Landing page builder",
+                      "NPS form builder",
+                      "Registration form builder",
+                      "Short form builder",
+                    ].map((item) => (
+                      <Link
+                        key={item}
+                        href="#"
+                        className="
+                    block
+                    text-[17px]
+                    text-gray-100
+                    hover:text-white
+                    transition-colors
+                  "
+                      >
+                        {item}
+                      </Link>
+                    ))}
+
+                  </div>
+
+                </div>
+
+
+                {/* ================================================= */}
+                {/* PROMOTIONAL COLUMN */}
+                {/* ================================================= */}
+
+                <div className="col-span-4 pl-1">
+
+                  <div className="flex items-center gap-3 mb-6">
+
+                    <div className="text-gray-400">
+                      <svg
+                        width="18"
+                        height="18"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.5"
+                      >
+                        <rect x="4" y="5" width="16" height="14" rx="2" />
+                        <path d="M8 9h8M8 13h5" />
+                      </svg>
+                    </div>
+
+                    <span className="text-sm text-gray-300 tracking-wide">
+                      TEMPLATES
+                    </span>
+
+                  </div>
+
+
+                  {/* TEMPLATE CARD */}
+                  <Link
+                    href="#"
+                    className="group block"
+                  >
+
+                    <div className="relative h-[170px] flex items-center justify-center overflow-hidden rounded-xl">
+
+                      <div
+                        className="
+                    absolute
+                    w-[150px]
+                    h-[120px]
+                    bg-purple-400/20
+                    blur-3xl
+                  "
+                      />
+
+                      <div
+                        className="
+                    relative
+                    w-[190px]
+                    h-[120px]
+                    bg-[#f6edff]
+                    rounded-md
+                    shadow-xl
+                    rotate-[-2deg]
+                    transition-transform
+                    duration-300
+                    group-hover:scale-105
+                    group-hover:rotate-0
+                  "
+                      >
+
+                        <div className="p-4">
+
+                          <div className="text-[8px] text-purple-700 font-bold">
+                            ZoDigital
+                          </div>
+
+                          <div className="mt-5 text-[8px] text-gray-600">
+                            What's the best
+                            <br />
+                            email to reach
+                            <br />
+                            you on?
+                          </div>
+
+                          <button className="mt-2 text-[7px] px-2 py-1 bg-purple-500 text-white">
+                            Submit
+                          </button>
+
+                        </div>
+
+                      </div>
+
+                    </div>
+
+
+                    <div className="mt-3">
+
+                      <p className="text-[15px] text-gray-200">
+                        Free form, survey, and quiz templates
+                      </p>
+
+                      <span
+                        className="
+                    inline-block
+                    mt-2
+                    text-sm
+                    text-white
+                    border-b
+                    border-white
+                    pb-1
+                  "
+                      >
+                        Choose one →
+                      </span>
+
+                    </div>
+
+                  </Link>
+
+
+                  {/* RESEARCH FLOW */}
+                  <div className="mt-12">
+
+                    <div className="flex items-center gap-3 mb-5">
+
+                      <span className="text-gray-400">
+                        ☆
+                      </span>
+
+                      <span className="text-sm text-gray-300 tracking-wide">
+                        RESEARCH FLOW
+                      </span>
+
+                    </div>
+
+
+                    <Link
+                      href="#"
+                      className="group block"
+                    >
+
+                      <div className="relative h-[180px] flex items-center justify-center overflow-hidden">
+
+                        <div
+                          className="
+                      absolute
+                      w-[140px]
+                      h-[100px]
+                      bg-purple-500/20
+                      blur-3xl
+                    "
+                        />
+
+                        <div
+                          className="
+                      relative
+                      w-[180px]
+                      h-[120px]
+                      rounded-lg
+                      bg-purple-200
+                      rotate-[8deg]
+                      transition-transform
+                      duration-300
+                      group-hover:rotate-0
+                      group-hover:scale-105
+                    "
+                        >
+
+                          <div className="absolute inset-4 bg-white/70 rounded-md p-3">
+
+                            <div className="w-12 h-2 bg-gray-400 rounded mb-3" />
+
+                            <div className="text-[8px] text-gray-600">
+                              How familiar
+                              <br />
+                              are you with
+                              <br />
+                              Typeform?
+                            </div>
+
+                          </div>
+
+                        </div>
+
+                      </div>
+
+
+                      <p className="text-[15px] text-gray-200 leading-relaxed">
+                        Run in-depth AI-moderated studies in hours
+                      </p>
+
+                      <span
+                        className="
+                    inline-block
+                    mt-2
+                    text-sm
+                    text-white
+                    border-b
+                    border-white
+                    pb-1
+                  "
+                      >
+                        Learn more →
+                      </span>
+
+                    </Link>
+
+                  </div>
+
+                </div>
+
+              </div>
+
+            </div>
+
+          </div>
+        )}
+
+        {solutionsOpen && (
+          <div
+            className="
+      absolute
+      top-full
+      left-0
+      right-0
+      bg-[#29232d]
+      border-t
+      border-white/5
+      shadow-2xl
+    "
+            onMouseEnter={() => setSolutionsOpen(true)}
+            onMouseLeave={() => setSolutionsOpen(false)}
+          >
+            <div className="max-w-[1400px] mx-auto px-6 md:px-10 py-10">
+
+              <div className="grid grid-cols-12 gap-8">
+
+                {/* ================= TEAMS ================= */}
+
+                <div className="col-span-4 pr-8 border-r border-white/15">
+
+                  <div className="flex items-center gap-3 mb-8">
+                    <div className="text-gray-400">
+                      <svg
+                        width="18"
+                        height="18"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.5"
+                      >
+                        <circle cx="12" cy="8" r="3" />
+                        <path d="M5 20c0-3.5 3-6 7-6s7 2.5 7 6" />
+                      </svg>
+                    </div>
+
+                    <span className="text-sm text-gray-300 tracking-wide">
+                      TEAMS
+                    </span>
+                  </div>
+
+                  <div className="space-y-8">
+
+                    <MegaMenuItem
+                      title="Marketing"
+                      description="For B2B and B2C marketing"
+                    />
+
+                    <MegaMenuItem
+                      title="Product"
+                      description="For product, UX, and research"
+                    />
+
+                    <MegaMenuItem
+                      title="Human resources"
+                      description="For HR, ops, and talent"
+                    />
+
+                    <MegaMenuItem
+                      title="Customer success"
+                      description="For CS and education"
+                    />
+
+                  </div>
+                </div>
+
+
+                {/* ================= USE CASES ================= */}
+
+                <div className="col-span-4 px-1 pr-8 border-r border-white/15">
+
+                  <div className="flex items-center gap-3 mb-8">
+
+                    <div className="text-gray-400">
+                      <svg
+                        width="18"
+                        height="18"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.5"
+                      >
+                        <path d="M4 20V10" />
+                        <path d="M10 20V6" />
+                        <path d="M16 20V3" />
+                        <path d="M22 20H2" />
+                      </svg>
+                    </div>
+
+                    <span className="text-sm text-gray-300 tracking-wide">
+                      USE CASES
+                    </span>
+
+                  </div>
+
+                  <div className="space-y-7">
+
+                    {[
+                      "Lead generation",
+                      "Employee onboarding",
+                      "Employee satisfaction",
+                      "Employee engagement",
+                      "Customer feedback",
+                    ].map((item) => (
+                      <Link
+                        key={item}
+                        href="#"
+                        className="
+                  block
+                  text-[17px]
+                  text-gray-100
+                  hover:text-white
+                  transition-colors
+                "
+                      >
+                        {item}
+                      </Link>
+                    ))}
+
+                    <Link
+                      href="#"
+                      className="
+                inline-block
+                text-[16px]
+                text-white
+                border-b
+                border-white
+                pb-1
+                mt-1
+              "
+                    >
+                      View all use cases →
+                    </Link>
+
+                  </div>
+                </div>
+
+
+                {/* ================= PLANS ================= */}
+
+                <div className="col-span-4 pl-1">
+
+                  <div className="flex items-center gap-3 mb-8">
+
+                    <div className="text-gray-400">
+                      <svg
+                        width="18"
+                        height="18"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.5"
+                      >
+                        <rect x="4" y="4" width="6" height="6" />
+                        <rect x="14" y="4" width="6" height="6" />
+                        <rect x="4" y="14" width="6" height="6" />
+                        <rect x="14" y="14" width="6" height="6" />
+                      </svg>
+                    </div>
+
+                    <span className="text-sm text-gray-300 tracking-wide">
+                      PLANS
+                    </span>
+
+                  </div>
+
+                  <div className="space-y-8">
+
+                    <MegaMenuItem
+                      title="Core"
+                      description="Plans for everyone"
+                    />
+
+                    <MegaMenuItem
+                      title="Growth"
+                      description="Plans for GTM teams"
+                      badge="NEW"
+                    />
+
+                    <MegaMenuItem
+                      title="Research Flow"
+                      description="Plans for research teams"
+                      badge="NEW"
+                    />
+
+                    <MegaMenuItem
+                      title="Talent"
+                      description="Plans for HR and people teams"
+                    />
+
+                    <MegaMenuItem
+                      title="Enterprise"
+                      description="Plans for larger orgs"
+                    />
+
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        )}
+
+        {resourcesOpen && (
+          <div
+            className="
+      absolute
+      top-full
+      left-0
+      right-0
+      bg-[#29232d]
+      border-t
+      border-white/5
+      shadow-2xl
+    "
+            onMouseEnter={() => setResourcesOpen(true)}
+            onMouseLeave={() => setResourcesOpen(false)}
+          >
+
+            <div className="max-w-[1400px] mx-auto px-6 md:px-10 py-10">
+
+              <div className="grid grid-cols-12 gap-8">
+
+                {/* ================= SUPPORT ================= */}
+
+                <div className="col-span-4 pr-8 border-r border-white/15">
+
+                  <div className="flex items-center gap-3 mb-8">
+
+                    <div className="text-gray-400">
+                      <svg
+                        width="18"
+                        height="18"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.5"
+                      >
+                        <path d="M4 13a8 8 0 0 1 16 0" />
+                        <path d="M4 13v4a2 2 0 0 0 2 2h1v-6H4Z" />
+                        <path d="M20 13v4a2 2 0 0 1-2 2h-1v-6h3Z" />
+                      </svg>
+                    </div>
+
+                    <span className="text-sm text-gray-300 tracking-wide">
+                      SUPPORT
+                    </span>
+
+                  </div>
+
+                  <div className="space-y-8">
+
+                    <MegaMenuItem
+                      title="Help center"
+                      description="Find quick answers"
+                    />
+
+                    <MegaMenuItem
+                      title="Community"
+                      description="Share and interact"
+                    />
+
+                    <MegaMenuItem
+                      title="Contact us"
+                      description="Speak to our team"
+                    />
+
+                  </div>
+
+                </div>
+
+
+                {/* ================= COMPANY ================= */}
+
+                <div className="col-span-4 px-1 pr-8 border-r border-white/15">
+
+                  <div className="flex items-center gap-3 mb-8">
+
+                    <div className="text-gray-400">
+                      <svg
+                        width="18"
+                        height="18"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.5"
+                      >
+                        <rect x="5" y="5" width="14" height="15" />
+                        <path d="M9 20V9h6v11" />
+                        <path d="M2 20h20" />
+                      </svg>
+                    </div>
+
+                    <span className="text-sm text-gray-300 tracking-wide">
+                      COMPANY
+                    </span>
+
+                  </div>
+
+                  <div className="space-y-8">
+
+                    <MegaMenuItem
+                      title="Partners"
+                      description="Browse or join"
+                    />
+
+                    <MegaMenuItem
+                      title="Careers"
+                      description="Join our team"
+                    />
+
+                    <MegaMenuItem
+                      title="Webinars"
+                      description="Learn and get inspired"
+                    />
+
+                  </div>
+
+                </div>
+
+
+                {/* ================= BLOG ================= */}
+
+                <div className="col-span-4 pl-1">
+
+                  <div className="flex items-center gap-3 mb-8">
+
+                    <div className="text-gray-400">
+                      <svg
+                        width="18"
+                        height="18"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.5"
+                      >
+                        <path d="M5 5h4v14H5z" />
+                        <path d="M11 5h8v14h-8" />
+                        <path d="M14 8h3" />
+                        <path d="M14 11h3" />
+                      </svg>
+                    </div>
+
+                    <span className="text-sm text-gray-300 tracking-wide">
+                      BLOG
+                    </span>
+
+                  </div>
+
+
+                  {/* BLOG IMAGE */}
+
+                  <Link href="#" className="group block">
+
+                    <div
+                      className="
+                w-full
+                max-w-[310px]
+                h-[200px]
+                overflow-hidden
+                mb-6
+              "
+                    >
+
+                      <div
+                        className="
+                  relative
+                  w-full
+                  h-full
+                  bg-[#f8f6f8]
+                  transition-transform
+                  duration-300
+                  group-hover:scale-[1.02]
+                "
+                      >
+
+                        {/* Fake blog artwork */}
+                        <div className="absolute inset-3 bg-white">
+
+                          <div className="absolute left-3 top-3 w-[60px] h-[170px] bg-gray-100 rounded" />
+
+                          <div className="absolute left-[82px] top-4 w-[15px] h-[15px] rounded-full bg-purple-800" />
+
+                          <div className="absolute left-[108px] top-5 w-[55px] h-[4px] bg-gray-300 rounded" />
+
+                          <div className="absolute left-[108px] top-12 w-[35px] h-[4px] bg-gray-200 rounded" />
+
+                          <div className="absolute left-[82px] top-[55px] w-[180px] h-[95px] bg-purple-100">
+
+                            <div className="absolute right-4 top-4 w-[70px] h-[65px] bg-purple-300/60 rounded" />
+
+                            <div className="absolute left-5 top-6 w-[50px] h-[5px] bg-purple-300 rounded" />
+                            <div className="absolute left-5 top-9 w-[40px] h-[5px] bg-purple-200 rounded" />
+                            <div className="absolute left-5 top-12 w-[45px] h-[5px] bg-purple-200 rounded" />
+
+                          </div>
+
+                        </div>
+
+                      </div>
+
+                    </div>
+
+
+                    <p className="text-[17px] text-gray-100 mb-2">
+                      Our guides, latest news, and more.
+                    </p>
+
+                    <span
+                      className="
+                inline-block
+                text-[16px]
+                text-white
+                border-b
+                border-white
+                pb-1
+              "
+                    >
+                      Browse blog →
+                    </span>
+
+                  </Link>
+
+                </div>
+
+              </div>
+
+            </div>
+          </div>
+        )}
       </nav>
 
       {/* ─── HERO SECTION ───────────────────────────────────────────────────── */}
@@ -575,14 +1562,14 @@ export default function HomePage() {
               </button>
             </div>
 
-              <div className="relative aspect-video rounded-3xl bg-[#231A2A] border border-white/10 overflow-hidden shadow-2xl">
-                <iframe
-                  src="https://fast.wistia.net/embed/iframe/g8ze4tncn4"
-                  title="Research Flow"
-                  allow="autoplay; fullscreen"
-                  allowFullScreen
-                  className="absolute inset-0 w-full h-full border-0"
-                />
+            <div className="relative aspect-video rounded-3xl bg-[#231A2A] border border-white/10 overflow-hidden shadow-2xl">
+              <iframe
+                src="https://fast.wistia.net/embed/iframe/g8ze4tncn4"
+                title="Research Flow"
+                allow="autoplay; fullscreen"
+                allowFullScreen
+                className="absolute inset-0 w-full h-full border-0"
+              />
             </div>
           </div>
 
@@ -775,5 +1762,49 @@ export default function HomePage() {
         </div>
       </footer >
     </div >
+  );
+}
+
+function MegaMenuItem({
+  title,
+  description,
+  badge,
+}: {
+  title: string;
+  description: string;
+  badge?: string;
+}) {
+  return (
+    <a
+      href="#"
+      className="group block transition-all"
+    >
+      <div className="flex items-center gap-2">
+        <span className="text-[17px] text-gray-100 group-hover:text-white transition-colors">
+          {title}
+        </span>
+
+        {badge && (
+          <span
+            className="
+              text-[11px]
+              font-semibold
+              px-2
+              py-[2px]
+              rounded-full
+              bg-purple-500
+              text-white
+              shadow-[0_0_15px_rgba(168,85,247,0.6)]
+            "
+          >
+            {badge}
+          </span>
+        )}
+      </div>
+
+      <p className="text-[13px] text-gray-400 group-hover:text-gray-300 mt-0.5 transition-colors">
+        {description}
+      </p>
+    </a>
   );
 }
