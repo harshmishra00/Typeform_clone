@@ -8,10 +8,22 @@ from .database import Base
 def generate_uuid():
     return str(uuid.uuid4())
 
+class User(Base):
+    __tablename__ = "users"
+
+    id = Column(String, primary_key=True, default=generate_uuid)
+    email = Column(String, unique=True, index=True, nullable=False)
+    full_name = Column(String, nullable=False, default="")
+    hashed_password = Column(String, nullable=False)
+    created_at = Column(DateTime, default=datetime.utcnow)
+
+    forms = relationship("Form", back_populates="owner", cascade="all, delete-orphan")
+
 class Form(Base):
     __tablename__ = "forms"
 
     id = Column(String, primary_key=True, default=generate_uuid)
+    owner_id = Column(String, ForeignKey("users.id", ondelete="CASCADE"), nullable=True)
     title = Column(String, nullable=False, default="Untitled Form")
     description = Column(String, nullable=True, default="")
     status = Column(String, nullable=False, default="draft")  # "draft" | "published"
@@ -22,8 +34,10 @@ class Form(Base):
     created_at = Column(DateTime, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
 
+    owner = relationship("User", back_populates="forms")
     questions = relationship("Question", back_populates="form", cascade="all, delete-orphan", order_by="Question.order")
     responses = relationship("Response", back_populates="form", cascade="all, delete-orphan")
+
 
 class Question(Base):
     __tablename__ = "questions"

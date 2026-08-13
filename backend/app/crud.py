@@ -2,11 +2,33 @@ import json
 from typing import List, Optional, Dict, Any
 from sqlalchemy.orm import Session
 from sqlalchemy import func
-from . import models, schemas
+from . import models, schemas, auth
+
+# User CRUD
+def create_user(db: Session, user_in: schemas.UserCreate) -> models.User:
+    hashed_pwd = auth.get_password_hash(user_in.password)
+    db_user = models.User(
+        email=user_in.email.lower().strip(),
+        full_name=user_in.full_name or "",
+        hashed_password=hashed_pwd
+    )
+    db.add(db_user)
+    db.commit()
+    db.refresh(db_user)
+    return db_user
+
+def get_user_by_email(db: Session, email: str) -> Optional[models.User]:
+    return db.query(models.User).filter(models.User.email == email.lower().strip()).first()
+
+def get_user_by_id(db: Session, user_id: str) -> Optional[models.User]:
+    return db.query(models.User).filter(models.User.id == user_id).first()
 
 # Form CRUD
-def get_forms(db: Session) -> List[Dict[str, Any]]:
-    forms = db.query(models.Form).all()
+def get_forms(db: Session, user_id: Optional[str] = None) -> List[Dict[str, Any]]:
+    query = db.query(models.Form)
+    if user_id:
+        query = query.filter(models.Form.owner_id == user_id)
+    forms = query.order_by(models.Form.updated_at.desc()).all()
     result = []
     for form in forms:
         q_count = db.query(models.Question).filter(models.Question.form_id == form.id).count()
@@ -24,11 +46,13 @@ def get_forms(db: Session) -> List[Dict[str, Any]]:
         })
     return result
 
+
 def get_form(db: Session, form_id: str) -> Optional[models.Form]:
     return db.query(models.Form).filter(models.Form.id == form_id).first()
 
-def create_form(db: Session, form_in: schemas.FormCreate) -> models.Form:
+def create_form(db: Session, form_in: schemas.FormCreate, owner_id: Optional[str] = None) -> models.Form:
     db_form = models.Form(
+        owner_id=owner_id,
         title=form_in.title,
         description=form_in.description or "",
         status=form_in.status or "draft",
@@ -40,6 +64,7 @@ def create_form(db: Session, form_in: schemas.FormCreate) -> models.Form:
     db.add(db_form)
     db.commit()
     db.refresh(db_form)
+
 
     if form_in.questions:
         for idx, q_in in enumerate(form_in.questions):

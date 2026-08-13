@@ -1,0 +1,165 @@
+@import "tailwindcss";
+
+@theme {
+  --color-tf-primary: #faf9fb;
+  --color-tf-secondary: #3e3040;
+  --color-tf-accent: #3860be;
+  --color-tf-purple: #a057bb;
+  --color-tf-purple-light: #f9f2fd;
+  --color-tf-purple-hover: #753a88;
+  --color-tf-dark: #2a222b;
+  --color-tf-gray-light: #eeecee;
+  --color-tf-gray-border: #e5e1e5;
+  --color-tf-neutral-1000: #2a222b;
+  --color-tf-neutral-800: #564b58;
+  --color-tf-neutral-700: #655d67;
+  --color-tf-neutral-300: #d4d1d5;
+  --color-tf-neutral-200: #e5e1e5;
+  --color-tf-neutral-100: #eeecee;
+  --color-tf-neutral-50: #f5f3f6;
+  --color-tf-neutral-25: #faf9fb;
+
+  --font-twklausanne: "Twklausanne 400", Arial, sans-serif;
+  --font-tobias: Tobias, "Times New Roman", sans-serif;
+
+  --shadow-tf-sm-inset: rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(173, 158, 177, 0.07) -10px -10px 20px -10px inset, rgb(37, 28, 39) 10px 10px 20px -9px inset;
+  --shadow-tf-md: rgb(199, 197, 199) 0px 0px 12px 2px;
+  --shadow-tf-lg: rgba(162, 95, 186, 0.3) 0px 0px 25px 0px;
+
+  --animate-marquee: marquee 40s linear infinite;
+  --animate-marquee-reverse: marquee-reverse 40s linear infinite;
+}
+
+@layer base {
+  :root {
+    --brand-purple: #a057bb;
+    --brand-purple-hover: #753a88;
+    --brand-purple-light: #f9f2fd;
+    --bg-dark: #2a222b;
+    --card-dark: #3e3040;
+    --border-dark: #e5e1e5;
+  }
+
+  body {
+    background-color: #faf9fb;
+    color: #2a222b;
+    font-family: var(--font-twklausanne);
+    -webkit-font-smoothing: antialiased;
+  }
+}
+
+/* Custom scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #E2E2E0;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #C4C4C0;
+}
+
+/* Smooth Transitions for Respondent Flow */
+@keyframes slideUpFade {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideDownFade {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.animate-slide-up {
+  animation: slideUpFade 0.45s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-slide-down {
+  animation: slideDownFade 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-in-out forwards;
+}
+
+.animate-scale-in {
+  animation: scaleIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Typeform Badges & Buttons */
+.tf-key-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  height: 22px;
+  padding: 0 6px;
+  font-size: 11px;
+  font-weight: 700;
+  border-radius: 4px;
+  border: 1px solid rgba(0,0,0,0.15);
+  background-color: rgba(255,255,255,0.9);
+  color: #191919;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+.tf-button-primary {
+  background-color: var(--brand-purple);
+  color: white;
+  font-weight: 600;
+  padding: 10px 20px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+.tf-button-primary:hover {
+  background-color: var(--brand-purple-hover);
+  transform: translateY(-1px);
+}
+
+/* Focus ring for accessibility */
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--brand-purple);
+  outline-offset: 2px;
+}
+
