@@ -575,46 +575,14 @@ export default function HomePage() {
               </button>
             </div>
 
-            {/* Isometric Rotation and Continuous subtle floating motion */}
-            <div className="relative aspect-video rounded-3xl bg-[#231A2A] border border-white/10 overflow-hidden flex items-center justify-center p-8 shadow-2xl">
-              <video
-                autoPlay
-                loop
-                muted
-                playsInline
-                aria-hidden="true"
-                poster="/assets/images/video-fallback-s3.jpg"
-                className="absolute inset-0 w-full h-full object-cover z-0"
-              >
-                <source src="/assets/videos/research-flow-interview.mp4" type="video/mp4" />
-              </video>
-              <div className="absolute inset-0 bg-[#231A2A]/85 z-10" />
-
-              {/* Floating element with continuous sine wave motion */}
-              <motion.div
-                animate={{
-                  y: [0, -10, 0]
-                }}
-                transition={{
-                  duration: 4,
-                  repeat: Infinity,
-                  ease: "easeInOut"
-                }}
-                className="relative z-20 w-64 bg-white/5 border border-white/10 rounded-2xl p-4 shadow-xl space-y-4"
-              >
-                <div className="flex items-center space-x-2">
-                  {/* Round profile image avatar triggers */}
-                  <div className="flex -space-x-2">
-                    <div className="w-6 h-6 rounded-full bg-purple-500 border border-white flex items-center justify-center text-[10px] font-bold text-white">A</div>
-                    <div className="w-6 h-6 rounded-full bg-emerald-500 border border-white flex items-center justify-center text-[10px] font-bold text-white">B</div>
-                  </div>
-                  <span className="text-xs text-[#D3A2FF] font-bold">Recruit participants</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping" />
-                  <span className="text-xs text-white">2,310 VERIFIED</span>
-                </div>
-              </motion.div>
+              <div className="relative aspect-video rounded-3xl bg-[#231A2A] border border-white/10 overflow-hidden shadow-2xl">
+                <iframe
+                  src="https://fast.wistia.net/embed/iframe/g8ze4tncn4"
+                  title="Research Flow"
+                  allow="autoplay; fullscreen"
+                  allowFullScreen
+                  className="absolute inset-0 w-full h-full border-0"
+                />
             </div>
           </div>
 
