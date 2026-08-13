@@ -42,6 +42,7 @@ export default function Dashboard() {
   const [viewMode, setViewMode] = useState<'list' | 'grid'>('list');
   const [aiPanelOpen, setAiPanelOpen] = useState(true);
   const [aiPrompt, setAiPrompt] = useState('');
+  const [aiResponse, setAiResponse] = useState('');
 
   const fetchForms = async () => {
     try {
@@ -159,18 +160,38 @@ export default function Dashboard() {
                 <div className="w-12 h-12 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center mb-4">
                   <Sparkles className="w-6 h-6" />
                 </div>
-                <h2 className="text-xl font-bold text-gray-900 leading-snug mb-3">
-                  What do you want to achieve?
-                </h2>
-                <p className="text-xs text-gray-500 leading-relaxed mb-6">
-                  Tell Typeform AI your business goal. It can help you build forms, manage contacts, and create automations to get you there.
-                </p>
-                <button
-                  onClick={() => setShowCreateModal(true)}
-                  className="w-full max-w-[200px] border border-gray-200 hover:border-gray-300 text-gray-700 text-xs font-semibold py-2 px-4 rounded-lg bg-white shadow-2xs hover:bg-gray-50 transition-all cursor-pointer"
-                >
-                  Help me get started
-                </button>
+                {aiResponse ? (
+                  <div className="w-full text-left">
+                    <div className="bg-purple-50 border border-purple-100 rounded-xl p-4 mb-4">
+                      <div className="flex items-center space-x-2 mb-2">
+                        <Sparkles className="w-3.5 h-3.5 text-purple-600" />
+                        <span className="text-[10px] font-bold text-purple-700 uppercase">Typeform AI</span>
+                      </div>
+                      <p className="text-xs text-gray-700 leading-relaxed">{aiResponse}</p>
+                    </div>
+                    <button
+                      onClick={() => setAiResponse('')}
+                      className="text-[10px] text-gray-400 hover:text-gray-600 font-semibold transition-colors cursor-pointer"
+                    >
+                      ← Ask another question
+                    </button>
+                  </div>
+                ) : (
+                  <>
+                    <h2 className="text-xl font-bold text-gray-900 leading-snug mb-3">
+                      What do you want to achieve?
+                    </h2>
+                    <p className="text-xs text-gray-500 leading-relaxed mb-6">
+                      Tell Typeform AI your business goal. It can help you build forms, manage contacts, and create automations to get you there.
+                    </p>
+                    <button
+                      onClick={() => setShowCreateModal(true)}
+                      className="w-full max-w-[200px] border border-gray-200 hover:border-gray-300 text-gray-700 text-xs font-semibold py-2 px-4 rounded-lg bg-white shadow-2xs hover:bg-gray-50 transition-all cursor-pointer"
+                    >
+                      Help me get started
+                    </button>
+                  </>
+                )}
               </div>
             </div>
 
@@ -182,21 +203,35 @@ export default function Dashboard() {
                   placeholder="Ask Typeform AI"
                   value={aiPrompt}
                   onChange={(e) => setAiPrompt(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' && aiPrompt.trim()) {
+                      setAiResponse('Thanks for trying Typeform AI! This is a template showcasing the exact UI of Typeform. AI-powered features like smart form generation, contact management, and workflow automation will be included in future updates. Stay tuned! 🚀');
+                      setAiPrompt('');
+                    }
+                  }}
                   className="w-full bg-transparent text-xs text-gray-800 focus:outline-none placeholder-gray-400 mb-2"
                 />
                 <div className="flex items-center justify-between text-gray-400 pt-1">
                   <div className="flex items-center space-x-2">
-                    <button className="hover:text-gray-600 transition-colors">
+                    <button className="hover:text-gray-600 transition-colors cursor-pointer">
                       <Mic className="w-3.5 h-3.5" />
                     </button>
-                    <button className="hover:text-gray-600 transition-colors">
+                    <button className="hover:text-gray-600 transition-colors cursor-pointer">
                       <Plus className="w-3.5 h-3.5" />
                     </button>
-                    <button className="hover:text-gray-600 transition-colors text-[11px] font-medium">
+                    <button className="hover:text-gray-600 transition-colors text-[11px] font-medium cursor-pointer">
                       ...
                     </button>
                   </div>
-                  <button className="p-1 rounded-lg bg-purple-100 text-purple-600 hover:bg-purple-600 hover:text-white transition-colors">
+                  <button
+                    onClick={() => {
+                      if (aiPrompt.trim()) {
+                        setAiResponse('Thanks for trying Typeform AI! This is a template showcasing the exact UI of Typeform. AI-powered features like smart form generation, contact management, and workflow automation will be included in future updates. Stay tuned! 🚀');
+                        setAiPrompt('');
+                      }
+                    }}
+                    className="p-1 rounded-lg bg-purple-100 text-purple-600 hover:bg-purple-600 hover:text-white transition-colors cursor-pointer"
+                  >
                     <Send className="w-3 h-3" />
                   </button>
                 </div>
