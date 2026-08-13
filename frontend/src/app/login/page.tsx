@@ -108,6 +108,7 @@ const MicrosoftIcon = () => (
 export default function LoginPage() {
   const [slide, setSlide] = useState(0);
   const [playing, setPlaying] = useState(true);
+  const [showPasswordStep, setShowPasswordStep] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -122,21 +123,26 @@ export default function LoginPage() {
   const prev = () => setSlide((p) => (p - 1 + SLIDES.length) % SLIDES.length);
   const next = () => setSlide((p) => (p + 1) % SLIDES.length);
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!email || !password) {
-      setError('Please fill in both email and password.');
+  const handleContinueWithEmail = () => {
+    if (!email) {
+      setError('Please enter your email address.');
       return;
     }
-    
-    // Email regex validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       setError('Please enter a valid email address.');
       return;
     }
+    setError('');
+    setShowPasswordStep(true);
+  };
 
-    // Basic password validation
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!password) {
+      setError('Please enter your password.');
+      return;
+    }
     if (password.length < 6) {
       setError('Password must be at least 6 characters.');
       return;
@@ -161,7 +167,7 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen flex font-twklausanne text-tf-neutral-1000 bg-white">
-      {/* ─── LEFT: Login form ───────────────────────────────────────────── */}
+      {/* ─── LEFT: Login panel ──────────────────────────────────────────── */}
       <div className="flex-1 flex flex-col justify-between p-6 sm:p-10">
         {/* top bar with logo */}
         <div className="flex justify-between items-center">
@@ -181,69 +187,146 @@ export default function LoginPage() {
           </div>
         </div>
 
-        {/* form area */}
-        <div className="max-w-[380px] w-full mx-auto space-y-7">
-          {/* heading */}
-          <div className="space-y-2">
-            <h1 className="text-3xl font-bold text-tf-neutral-1000 tracking-tight">Log in</h1>
-            <p className="text-sm text-gray-500 leading-relaxed">
-              Build forms, gather responses, and automate your workflows.
-            </p>
-          </div>
+        {/* center content */}
+        <div className="max-w-[380px] w-full mx-auto">
+          <AnimatePresence mode="wait">
+            {!showPasswordStep ? (
+              /* ── Step 1: OAuth + Email field + Continue ─────────────── */
+              <motion.div
+                key="email-step"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.25 }}
+                className="space-y-6"
+              >
+                {/* Heading */}
+                <div className="space-y-2">
+                  <h1 className="text-3xl font-bold text-tf-neutral-1000 tracking-tight">Log in</h1>
+                  <p className="text-sm text-gray-500 leading-relaxed">
+                    Build forms, gather responses, and automate your workflows.
+                  </p>
+                </div>
 
-          {error && (
-            <div className="p-3.5 rounded-xl bg-red-50 border border-red-200 text-red-600 text-xs font-semibold">
-              {error}
-            </div>
-          )}
+                {error && (
+                  <div className="p-3.5 rounded-xl bg-red-50 border border-red-200 text-red-600 text-xs font-semibold">
+                    {error}
+                  </div>
+                )}
 
-          {/* Form */}
-          <form onSubmit={handleSubmit} className="space-y-4">
-            {/* email field */}
-            <div className="space-y-1.5">
-              <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider">Email</label>
-              <input
-                type="email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Enter your email address"
-                className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-tf-purple focus:border-transparent placeholder:text-gray-400 transition-all"
-              />
-            </div>
+                {/* OAuth buttons */}
+                <div className="space-y-3">
+                  <button className="w-full flex items-center justify-center space-x-3 px-4 py-3 border border-gray-200 rounded-xl text-sm font-semibold text-tf-neutral-1000 hover:bg-gray-50 transition-colors cursor-pointer">
+                    <GoogleIcon />
+                    <span>Continue with Google</span>
+                  </button>
+                  <button className="w-full flex items-center justify-center space-x-3 px-4 py-3 border border-gray-200 rounded-xl text-sm font-semibold text-tf-neutral-1000 hover:bg-gray-50 transition-colors cursor-pointer">
+                    <MicrosoftIcon />
+                    <span>Continue with Microsoft</span>
+                  </button>
+                </div>
 
-            {/* password field */}
-            <div className="space-y-1.5">
-              <div className="flex justify-between items-center">
-                <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider">Password</label>
-              </div>
-              <input
-                type="password"
-                required
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Enter your password"
-                className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-tf-purple focus:border-transparent placeholder:text-gray-400 transition-all"
-              />
-            </div>
+                {/* Email field */}
+                <div className="space-y-1.5">
+                  <label className="block text-sm font-semibold text-tf-neutral-1000">Email</label>
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    onKeyDown={(e) => { if (e.key === 'Enter') { e.preventDefault(); handleContinueWithEmail(); } }}
+                    placeholder="Enter your email address"
+                    className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-tf-purple focus:border-transparent placeholder:text-gray-400 transition-all"
+                  />
+                </div>
 
-            {/* CTA */}
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full mt-2 flex items-center justify-center px-4 py-3.5 bg-tf-neutral-1000 hover:bg-tf-neutral-800 text-white rounded-xl font-semibold text-sm transition-colors cursor-pointer disabled:opacity-50"
-            >
-              {loading ? 'Logging in...' : 'Log in to Typeform →'}
-            </button>
-          </form>
+                {/* Continue with email */}
+                <button
+                  onClick={handleContinueWithEmail}
+                  className="w-full flex items-center justify-center px-4 py-3.5 bg-tf-neutral-1000 hover:bg-tf-neutral-800 text-white rounded-xl font-semibold text-sm transition-colors cursor-pointer"
+                >
+                  Continue with email
+                </button>
 
-          {/* Sign-up redirect */}
-          <div className="text-center text-sm text-gray-500">
-            Don&apos;t have an account?{' '}
-            <Link href="/signup" className="font-bold text-tf-neutral-1000 underline underline-offset-4 hover:no-underline">
-              Sign up
-            </Link>
-          </div>
+                {/* SSO link */}
+                <div className="text-center">
+                  <button className="text-sm font-semibold text-tf-neutral-1000 underline underline-offset-4 hover:no-underline cursor-pointer">
+                    Log in with SSO
+                  </button>
+                </div>
+
+                {/* Sign-up redirect */}
+                <div className="text-center text-sm text-gray-500">
+                  Don&apos;t have an account?{' '}
+                  <Link href="/signup" className="font-bold text-tf-neutral-1000 underline underline-offset-4 hover:no-underline">
+                    Sign up
+                  </Link>
+                </div>
+              </motion.div>
+            ) : (
+              /* ── Step 2: Password field + Submit ────────────────────── */
+              <motion.div
+                key="password-step"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.25 }}
+                className="space-y-6"
+              >
+                {/* Back + heading */}
+                <div className="space-y-3">
+                  <button
+                    onClick={() => { setShowPasswordStep(false); setError(''); setPassword(''); }}
+                    className="flex items-center space-x-1 text-xs font-semibold text-gray-500 hover:text-tf-neutral-1000 transition-colors cursor-pointer"
+                  >
+                    <ChevronLeft className="w-4 h-4" />
+                    <span>All log in options</span>
+                  </button>
+                  <h1 className="text-2xl font-bold text-tf-neutral-1000 tracking-tight">Enter your password</h1>
+                  <p className="text-sm text-gray-500 leading-relaxed">
+                    Logging in as <span className="font-semibold text-tf-neutral-1000">{email}</span>
+                  </p>
+                </div>
+
+                {error && (
+                  <div className="p-3.5 rounded-xl bg-red-50 border border-red-200 text-red-600 text-xs font-semibold">
+                    {error}
+                  </div>
+                )}
+
+                <form onSubmit={handleSubmit} className="space-y-4">
+                  <div className="space-y-1.5">
+                    <label className="block text-sm font-semibold text-tf-neutral-1000">Password</label>
+                    <input
+                      type="password"
+                      required
+                      autoFocus
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      placeholder="Enter your password"
+                      className="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-tf-purple focus:border-transparent placeholder:text-gray-400 transition-all"
+                    />
+                  </div>
+
+                  <button
+                    type="submit"
+                    disabled={loading}
+                    className="w-full flex items-center justify-center px-4 py-3.5 bg-tf-neutral-1000 hover:bg-tf-neutral-800 text-white rounded-xl font-semibold text-sm transition-colors cursor-pointer disabled:opacity-50"
+                  >
+                    {loading ? 'Logging in...' : 'Log in to Typeform →'}
+                  </button>
+                </form>
+
+                {/* Sign-up redirect */}
+                <div className="text-center text-sm text-gray-500">
+                  Don&apos;t have an account?{' '}
+                  <Link href="/signup" className="font-bold text-tf-neutral-1000 underline underline-offset-4 hover:no-underline">
+                    Sign up
+                  </Link>
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
+          <p className='text-xs text-center text-gray-500 mt-2'>Google and Microsoft sign-in/sign-up are currently not functional in this clone. Please use a demo email or any test credentials to access the website.</p>
         </div>
 
         {/* spacer */}
@@ -288,6 +371,7 @@ export default function LoginPage() {
           <button onClick={next} className="p-1.5 hover:bg-white/10 rounded-full transition-colors text-tf-neutral-300 hover:text-white cursor-pointer"><ChevronRight className="w-5 h-5" /></button>
         </div>
       </div>
+
     </div>
   );
 }

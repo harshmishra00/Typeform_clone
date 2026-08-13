@@ -1760,6 +1760,8 @@ export default function HomePage() {
             </div>
           </div>
         </div>
+        <p>This website is a clone created by Harsh Mishra for educational and demonstration purposes. Since this is a clone, some features and functionality of the original website may not work as intended.
+</p>
       </footer >
     </div >
   );

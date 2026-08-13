@@ -118,6 +118,7 @@ const MicrosoftIcon = () => (
 export default function SignupPage() {
   const [slide, setSlide] = useState(0);
   const [playing, setPlaying] = useState(true);
+  const [showEmailForm, setShowEmailForm] = useState(false);
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -233,7 +234,7 @@ export default function SignupPage() {
         </div>
       </div>
 
-      {/* ─── RIGHT: Sign-up form ────────────────────────────────────────── */}
+      {/* ─── RIGHT: Sign-up panel ───────────────────────────────────────── */}
       <div className="flex-1 flex flex-col justify-between p-6 sm:p-10">
         {/* top bar */}
         <div className="flex justify-between items-center">
@@ -247,78 +248,143 @@ export default function SignupPage() {
           </div>
         </div>
 
-        {/* form area */}
-        <div className="max-w-[400px] w-full mx-auto space-y-6">
-          {/* logo */}
-          <div className="text-center space-y-3">
-            <div className="flex justify-center items-center space-x-2 text-tf-neutral-1000">
-              <svg className="w-9 h-6" viewBox="0 0 43 24" fill="currentColor">
-                <path fillRule="evenodd" clipRule="evenodd" d="M0 5.42456C0 1.8517 1.40765 0 3.78009 0C6.15215 0 7.56018 1.8517 7.56018 5.42456V16.2479C7.56018 19.8208 6.15252 21.6725 3.78009 21.6725C1.40765 21.6725 0 19.8208 0 16.2479V5.42456ZM25.4643 0H17.6512C10.6419 0 10.0894 3.027 10.0894 7.06301L10.0802 14.599C10.0802 18.8069 10.6082 21.6725 17.6784 21.6725H25.4643C32.4961 21.6725 33.0128 18.656 33.0128 14.62V7.07352C33.0128 3.027 32.4736 0 25.4643 0Z" />
-              </svg>
-              <span className="font-bold text-xl tracking-tight">Typeform</span>
-            </div>
-            <p className="text-sm text-gray-500 font-normal leading-relaxed">
-              Create a free account to build conversational forms and surveys.
-            </p>
-          </div>
+        {/* center content */}
+        <div className="max-w-[400px] w-full mx-auto">
+          <AnimatePresence mode="wait">
+            {!showEmailForm ? (
+              /* ── Step 1: OAuth + Email CTA ─────────────────────────────── */
+              <motion.div
+                key="oauth-step"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.25 }}
+                className="space-y-6"
+              >
+                {/* Logo & tagline */}
+                <div className="text-center space-y-3">
+                  <div className="flex justify-center items-center space-x-2 text-tf-neutral-1000">
+                    <svg className="w-9 h-6" viewBox="0 0 43 24" fill="currentColor">
+                      <path fillRule="evenodd" clipRule="evenodd" d="M0 5.42456C0 1.8517 1.40765 0 3.78009 0C6.15215 0 7.56018 1.8517 7.56018 5.42456V16.2479C7.56018 19.8208 6.15252 21.6725 3.78009 21.6725C1.40765 21.6725 0 19.8208 0 16.2479V5.42456ZM25.4643 0H17.6512C10.6419 0 10.0894 3.027 10.0894 7.06301L10.0802 14.599C10.0802 18.8069 10.6082 21.6725 17.6784 21.6725H25.4643C32.4961 21.6725 33.0128 18.656 33.0128 14.62V7.07352C33.0128 3.027 32.4736 0 25.4643 0Z" />
+                    </svg>
+                    <span className="font-bold text-xl tracking-tight">Typeform</span>
+                  </div>
+                  <p className="text-sm text-gray-500 font-normal leading-relaxed max-w-xs mx-auto">
+                    Get better data with conversational forms, surveys, quizzes and more.
+                  </p>
+                </div>
 
-          {error && (
-            <div className="p-3.5 rounded-xl bg-red-50 border border-red-200 text-red-600 text-xs font-semibold">
-              {error}
-            </div>
-          )}
+                {/* OAuth buttons */}
+                <div className="space-y-3">
+                  <button className="w-full flex items-center justify-center space-x-3 px-4 py-3 border border-gray-200 rounded-xl text-sm font-semibold text-tf-neutral-1000 hover:bg-gray-50 transition-colors cursor-pointer">
+                    <GoogleIcon />
+                    <span>Sign up with Google</span>
+                  </button>
+                  <button className="w-full flex items-center justify-center space-x-3 px-4 py-3 border border-gray-200 rounded-xl text-sm font-semibold text-tf-neutral-1000 hover:bg-gray-50 transition-colors cursor-pointer">
+                    <MicrosoftIcon />
+                    <span>Sign up with Microsoft</span>
+                  </button>
+                </div>
 
-          {/* Form */}
-          <form onSubmit={handleSubmit} className="space-y-3.5">
-            <div className="space-y-1">
-              <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider">Full Name</label>
-              <input
-                type="text"
-                value={fullName}
-                onChange={(e) => setFullName(e.target.value)}
-                placeholder="e.g. Jane Doe"
-                className="w-full px-3.5 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-tf-purple focus:border-transparent placeholder:text-gray-400 transition-all"
-              />
-            </div>
+                {/* OR divider */}
+                <div className="flex items-center space-x-4">
+                  <div className="flex-1 h-px bg-gray-200" />
+                  <span className="text-xs font-semibold text-gray-400 uppercase">OR</span>
+                  <div className="flex-1 h-px bg-gray-200" />
+                </div>
 
-            <div className="space-y-1">
-              <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider">Email <span className="text-red-500">*</span></label>
-              <input
-                type="email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="name@company.com"
-                className="w-full px-3.5 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-tf-purple focus:border-transparent placeholder:text-gray-400 transition-all"
-              />
-            </div>
+                {/* Email CTA button */}
+                <button
+                  onClick={() => { setShowEmailForm(true); setError(''); }}
+                  className="w-full flex items-center justify-center px-4 py-3.5 bg-tf-neutral-1000 hover:bg-tf-neutral-800 text-white rounded-xl font-semibold text-sm transition-colors cursor-pointer"
+                >
+                  Sign up with email
+                </button>
+                <p className='text-xs text-center text-gray-500 mt-2'>Google and Microsoft sign-in/sign-up are currently not functional in this clone. Please use a demo email or any test credentials to access the website.</p>
+              </motion.div>
+            ) : (
+              /* ── Step 2: Email sign-up form ────────────────────────────── */
+              <motion.div
+                key="email-step"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.25 }}
+                className="space-y-6"
+              >
+                {/* Back button + heading */}
+                <div className="space-y-3">
+                  <button
+                    onClick={() => { setShowEmailForm(false); setError(''); }}
+                    className="flex items-center space-x-1 text-xs font-semibold text-gray-500 hover:text-tf-neutral-1000 transition-colors cursor-pointer"
+                  >
+                    <ChevronLeft className="w-4 h-4" />
+                    <span>All sign up options</span>
+                  </button>
+                  <h1 className="text-2xl font-bold text-tf-neutral-1000 tracking-tight">Sign up with email</h1>
+                </div>
 
-            <div className="space-y-1">
-              <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider">Password <span className="text-red-500">*</span></label>
-              <input
-                type="password"
-                required
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="Create a strong password"
-                className="w-full px-3.5 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-tf-purple focus:border-transparent placeholder:text-gray-400 transition-all"
-              />
-            </div>
+                {error && (
+                  <div className="p-3.5 rounded-xl bg-red-50 border border-red-200 text-red-600 text-xs font-semibold">
+                    {error}
+                  </div>
+                )}
 
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full mt-2 flex items-center justify-center px-4 py-3 bg-tf-neutral-1000 hover:bg-tf-neutral-800 text-white rounded-xl font-semibold text-sm transition-colors cursor-pointer disabled:opacity-50"
-            >
-              {loading ? 'Creating account...' : 'Create my free account →'}
-            </button>
-          </form>
+                {/* Form */}
+                <form onSubmit={handleSubmit} className="space-y-3.5">
+                  <div className="space-y-1">
+                    <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider">Full Name</label>
+                    <input
+                      type="text"
+                      value={fullName}
+                      onChange={(e) => setFullName(e.target.value)}
+                      placeholder="e.g. Jane Doe"
+                      className="w-full px-3.5 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-tf-purple focus:border-transparent placeholder:text-gray-400 transition-all"
+                    />
+                  </div>
+
+                  <div className="space-y-1">
+                    <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider">Email <span className="text-red-500">*</span></label>
+                    <input
+                      type="email"
+                      required
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder="name@company.com"
+                      className="w-full px-3.5 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-tf-purple focus:border-transparent placeholder:text-gray-400 transition-all"
+                    />
+                  </div>
+
+                  <div className="space-y-1">
+                    <label className="block text-xs font-bold text-gray-700 uppercase tracking-wider">Password <span className="text-red-500">*</span></label>
+                    <input
+                      type="password"
+                      required
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      placeholder="Min 8 chars, letters & numbers"
+                      className="w-full px-3.5 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-tf-purple focus:border-transparent placeholder:text-gray-400 transition-all"
+                    />
+                  </div>
+
+                  <button
+                    type="submit"
+                    disabled={loading}
+                    className="w-full mt-2 flex items-center justify-center px-4 py-3 bg-tf-neutral-1000 hover:bg-tf-neutral-800 text-white rounded-xl font-semibold text-sm transition-colors cursor-pointer disabled:opacity-50"
+                  >
+                    {loading ? 'Creating account...' : 'Create my free account →'}
+                  </button>
+                </form>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </div>
 
         {/* footer */}
         <p className="text-[10px] text-gray-400 text-center max-w-sm mx-auto leading-relaxed pt-4">
           By signing up, you agree to Typeform&apos;s Terms of Service and Privacy Policy.
         </p>
+        
       </div>
     </div>
   );
