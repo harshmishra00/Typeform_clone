@@ -139,10 +139,36 @@ export default function SignupPage() {
       setError('Please provide an email address and password.');
       return;
     }
+
+    // Name validation
+    if (!fullName.trim() || fullName.trim().length < 2) {
+      setError('Please enter your full name (minimum 2 characters).');
+      return;
+    }
+
+    // Email regex validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      setError('Please enter a valid email address.');
+      return;
+    }
+
+    // Password strength validation (min 8 characters, at least 1 letter and 1 number)
+    if (password.length < 8) {
+      setError('Password must be at least 8 characters long.');
+      return;
+    }
+    const hasLetter = /[a-zA-Z]/.test(password);
+    const hasNumber = /[0-9]/.test(password);
+    if (!hasLetter || !hasNumber) {
+      setError('Password must contain both letters and numbers.');
+      return;
+    }
+
     try {
       setLoading(true);
       setError('');
-      const res = await signupUser({ email, password, full_name: fullName });
+      const res = await signupUser({ email, password, full_name: fullName.trim() });
       if (res.access_token) {
         localStorage.setItem('tf_token', res.access_token);
         localStorage.setItem('tf_user', JSON.stringify(res.user));
