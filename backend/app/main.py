@@ -35,6 +35,7 @@ def root():
 # --- Authentication Endpoints ---
 
 @app.post("/api/auth/signup", response_model=schemas.Token, status_code=status.HTTP_201_CREATED)
+@app.post("/auth/signup", response_model=schemas.Token, status_code=status.HTTP_201_CREATED)
 def signup(user_in: schemas.UserCreate, db: Session = Depends(get_db)):
     existing = crud.get_user_by_email(db, user_in.email)
     if existing:
@@ -51,6 +52,7 @@ def signup(user_in: schemas.UserCreate, db: Session = Depends(get_db)):
     }
 
 @app.post("/api/auth/login", response_model=schemas.Token)
+@app.post("/auth/login", response_model=schemas.Token)
 def login(credentials: schemas.UserLogin, db: Session = Depends(get_db)):
     user = crud.get_user_by_email(db, credentials.email)
     if not user or not auth.verify_password(credentials.password, user.hashed_password):
@@ -66,6 +68,7 @@ def login(credentials: schemas.UserLogin, db: Session = Depends(get_db)):
     }
 
 @app.get("/api/auth/me", response_model=schemas.UserOut)
+@app.get("/auth/me", response_model=schemas.UserOut)
 def get_me(current_user: models.User = Depends(auth.get_current_user)):
     return current_user
 
