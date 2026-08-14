@@ -10,7 +10,39 @@ The application runs end-to-end with pre-seeded surveys, featuring a dynamic dra
 
 - **Frontend**: Next.js 14/16 (TypeScript, App Router, Framer Motion, Tailwind CSS v4, Lucide Icons, Canvas-Confetti)
 - **Backend**: FastAPI (Python 3.10+, SQLAlchemy, Pydantic v2, Passlib with Bcrypt, PyJWT for auth)
-- **Database**: SQLite (Local development) / PostgreSQL (Production ready)
+- **Database**: SQLite (Local Development, as required) / PostgreSQL (Production Deployment)
+  - The application was developed and tested locally using **SQLite**, as specifically required for the project. SQLite was used throughout the development lifecycle for database modeling, CRUD operations, authentication, form management, response storage, and application testing.
+  - For the production deployment, the database was migrated to **PostgreSQL** to address the limitations of SQLite in a cloud-hosted, multi-user environment.
+
+  ### Why SQLite was used during development
+  - SQLite is a lightweight, serverless, file-based relational database that requires virtually no configuration.
+  - It allowed rapid local development without requiring a separate database server or external database service.
+  - It provided full relational database capabilities required by the application, including tables, relationships, constraints, transactions, and SQL queries.
+  - Using SQLite significantly simplified the local development and testing workflow while keeping the application architecture compatible with a production relational database.
+
+  ### Why PostgreSQL was used for production
+  Although SQLite is highly suitable for local development and small-scale applications, its file-based architecture introduces limitations when an application is deployed as a production web service.
+
+  - **Concurrent writes**: SQLite uses database-level/file-level locking mechanisms that can become a bottleneck when multiple users or requests attempt to perform write operations concurrently. PostgreSQL is designed to handle high levels of concurrent reads and writes.
+  - **Multi-user workloads**: A deployed web application can receive requests from multiple users simultaneously. PostgreSQL provides a more robust concurrency model for handling these workloads.
+  - **Cloud deployment**: SQLite stores the database inside a local database file. In cloud environments, the application's filesystem may be ephemeral, meaning files stored on the instance can potentially be lost when the service is redeployed or recreated unless persistent storage is explicitly configured.
+  - **Scalability**: PostgreSQL is better suited for applications that may grow in terms of users, requests, database size, and concurrent operations.
+  - **Production reliability**: PostgreSQL provides production-oriented features for transaction handling, concurrency control, indexing, connection management, backup strategies, and database administration.
+  - **Deployment architecture**: PostgreSQL operates as a dedicated database service, allowing the backend application and database to be managed independently. This is more appropriate for a production deployment than keeping the database as a file inside the application environment.
+  - **Future extensibility**: PostgreSQL provides a broader set of database capabilities and makes it easier to extend the application if more complex queries, larger datasets, background processing, analytics, or higher traffic requirements are introduced.
+
+  ### Database Migration
+  The database abstraction layer was implemented using **SQLAlchemy**, allowing the application to maintain the same ORM-based data-access architecture while switching the underlying database engine between development and production.
+
+  **Local Development:**
+  ```text
+  FastAPI
+      ↓
+  SQLAlchemy
+      ↓
+  SQLite
+      ↓
+  Local database file
 - **Aesthetics & Design System**: Typeform signature palette (Primary `#faf9fb`, Secondary `#3e3040`, Accent `#3860be`, Brand Purple `#a057bb`), custom premium typography (Twklausanne & Tobias), sleek keyboard badge overlays, custom smooth keyframe animations (`slideUpFade`, `scaleIn`, `shimmer`).
 
 ---
